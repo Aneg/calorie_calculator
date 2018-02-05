@@ -5,7 +5,7 @@
       <caption>
         <button class='button button-blue' @click="save">Сохранить</button>
         <button class='button button-gray' @click="revert">Восстановить</button>
-        <button class='button button-red delete' @click="dropBasket">Удалить </button>
+        <button class='button button-red delete' @click="drop">Удалить </button>
       </caption>
       <tr>
         <th>Название</th>
@@ -69,9 +69,6 @@ export default {
     this.revert() 
   },
   methods: {
-    revert() {
-      this.basket = copyValue(this.old_basket)
-    },
     getCount(name) {
       var protein = 0
       this.basket.list.forEach((item) => {
@@ -84,18 +81,20 @@ export default {
       this.form.name = findObjectById(this.products, this.form.product_id).name
       this.basket.list.unshift(this.form)
       this.form = {product_id: '', weight: ''}
-      this.$emit('updateBasket', this.basket)
     },
     dropFromBasket(key) {
       this.basket.list.splice(key, 1)
-      this.$emit('dropOrupdateBasket', this.basket.id, this.basket)  
+      // this.$emit('dropOrupdateBasket', this.basket.id, this.basket)  
     },
-    dropBasket() {
+    drop() {
       this.$emit('dropOrupdateBasket', this.basket.id)
     },
     save() {
       this.$emit('dropOrupdateBasket', this.basket.id, this.basket)
-    }
+    },
+    revert() {
+      this.basket = copyValue(this.old_basket)
+    },
   }
 }
 </script>

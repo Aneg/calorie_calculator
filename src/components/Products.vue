@@ -22,7 +22,7 @@
         <td><input placeholder="Калории" v-model.lazy="form.calculus"></td>
         <td><button class='button button-green' @click="add">+</button></td>
       </tr>
-      <tr v-for="(product, i) in products">
+      <tr v-for="(product, i) in products" v-bind:key='product.id'>
         <td><input v-model.lazy="product.name"></td>
         <td><input v-model.lazy="product.protein"></td>
         <td><input v-model.lazy="product.fat"></td>
@@ -35,14 +35,11 @@
 </template>
 
 <script>
-import { copyValue, dropOrUpdateObjectById } from '@/helpers/helper'
+import { copyValue, dropOrUpdateObjectById } from '@/helpers/helper';
+import generateId from '@/mixins/generateId.vue';
+
 export default {
   name: 'Products',
-  props: {
-    old_products: Array,
-    addProduct: Function,
-    dropProduct: Function
-  },
   data () {
     return {
       products: [],
@@ -50,7 +47,10 @@ export default {
     }
   },
   beforeMount() { 
-    this.revertProducts() 
+    this.revertProducts();
+  },
+  created() {
+    this.products = copyValue(this.$store.getters.products);
   },
   methods: {
     add() {
@@ -61,10 +61,10 @@ export default {
       dropOrUpdateObjectById(this.products, id) 
     },
     saveProducts() {
-      this.$emit('updateProducts', this.products)
+      this.$store.dispatch('saveProducts', this.products);
     },
     revertProducts() {
-      this.products = copyValue(this.old_products)
+      this.products = copyValue(this.$store.getters.products);
     }
   }
 }

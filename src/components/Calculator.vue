@@ -3,8 +3,8 @@
     <h2>Дневной рацион</h2>
     <button class='button button-green' @click="addBasket">Добавить блок</button>
     <div>
-      <div class="baskets" v-for="basket in baskets">
-        <Basket :products="products" :old_basket="basket" @dropOrupdateBasket='dropOrupdateBasket'></Basket>
+      <div class="baskets" v-for="basket in baskets" :key=basket.id>
+        <Basket :products="$store.getters.products" :old_basket="basket" @dropOrupdateBasket='dropOrupdateBasket'></Basket>
       </div>
     </div>
   </div>
@@ -12,13 +12,10 @@
 
 <script>
 import Basket from '@/components/Basket.vue';
-import { dropOrUpdateObjectById } from '@/helpers/helper'
-import generateId from '@/mixins/generateId.vue'
+import { copyValue, dropOrUpdateObjectById } from '@/helpers/helper';
+import generateId from '@/mixins/generateId.vue';
+
 export default {
-  mixins: [generateId],
-  props: {
-    products: Array,
-  },
   data () {
     return {
       baskets: [],
@@ -28,11 +25,13 @@ export default {
     Basket
   },
   methods: {
-    addBasket() { 
-      return this.baskets.unshift({id: this.generateNextId(), list: []})
+    addBasket() {
+      this.baskets.push({list: []})
     },
     dropOrupdateBasket(id, basket = null) { 
       dropOrUpdateObjectById(this.baskets, id, basket) 
+      this.$store.dispatch('saveBaskets', this.baskets);
+      this.baskets = copyValue(this.$store.getters.baskets);
     },
   }
 }

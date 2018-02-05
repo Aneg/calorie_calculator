@@ -1,9 +1,13 @@
 <template>
   <div id="app">
-    <!--<router-view/>-->
-    <Products :old_products='products' @updateProducts='updateProducts'></Products>
+    <div>
+      <router-link to="/products" tag='a'>Продукты</router-link>
+      <router-link to="/" tag='a'>Корзина</router-link>
+    </div>
+    <router-view/>
+    <!-- <Products></Products>
     <hr/>
-    <Calculator :products='products'></Calculator>
+    <Calculator></Calculator> -->
   </div>
 </template>
 
@@ -11,33 +15,14 @@
 import Products from '@/components/Products.vue'
 import Calculator from '@/components/Calculator.vue'
 import { dropOrUpdateObjectById } from '@/helpers/helper'
-import generateId from '@/mixins/generateId.vue'
 export default {
   name: 'App',
-  mixins: [generateId],
-  data () {
-    return {
-    products: [
-        { id: 1, name: 'Гречка', protein: 12.6, carbohydrate: 62.1, fat: 3.3, calculus: 313 },
-        { id: 2, name: 'Куриное филе', protein: 23.1, carbohydrate: 0.0, fat: 1.2, calculus: 110 }
-      ],
-    }
+  created() {
+    this.$store.dispatch('setProducts');
   },
   components: {
     Products,
     Calculator
-  },
-  methods: {
-    addProduct(product) {
-      product.id = this.generateNextId
-      this.products.unshift(product)
-    },
-    updateProducts(products) {
-      this.generateIdByObject(this.products = products)
-    },
-    dropOrUpdateProduct(id, newProduct = null) {
-      dropOrUpdateObjectById(this.products, id, newProduct)
-    }
   }
 }
 </script>

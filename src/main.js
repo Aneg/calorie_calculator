@@ -3,6 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from '@/store/store'
+
+// import VueRouter from 'vue-router'
+// import routes from '@/routers'
+
+// Vue.use(VueRouter)
+// const router = new VueRouter({
+//   mode: 'history',
+//   routes
+// });
 
 Vue.config.productionTip = false
 
@@ -10,6 +20,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
