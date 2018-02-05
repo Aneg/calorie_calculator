@@ -50,6 +50,7 @@ export default {
     this.revertProducts();
   },
   created() {
+    console.log(this.$store.getters.baskets);
     this.products = copyValue(this.$store.getters.products);
   },
   methods: {

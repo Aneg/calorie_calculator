@@ -33,6 +33,10 @@
         <td>{{product.name }}</td>
         <td><input v-model="product.weight"></td>
         <td><button class="button button-red" @click="dropFromBasket(i)">-</button></td>
+        <td>{{ product.weight/100 }}</td>
+        <td>{{product.name }}</td>
+        <td>{{product.name }}</td>
+        <td>{{product.name }}</td>
       </tr>
     </table>
   </div>

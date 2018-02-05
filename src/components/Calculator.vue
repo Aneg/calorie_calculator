@@ -24,6 +24,9 @@ export default {
   components: {
     Basket
   },
+  created() {
+    this.baskets = copyValue(this.$store.getters.baskets)
+  },
   methods: {
     addBasket() {
       this.baskets.push({list: []})
