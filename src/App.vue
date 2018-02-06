@@ -14,11 +14,11 @@
 <script>
 import Products from '@/components/Products.vue'
 import Calculator from '@/components/Calculator.vue'
-import { dropOrUpdateObjectById } from '@/helpers/helper'
+
 export default {
   name: 'App',
-  created() {
-    this.$store.dispatch('setProducts');
+  created () {
+    this.$store.dispatch('setProducts')
   },
   components: {
     Products,
@@ -49,11 +49,11 @@ export default {
 }
 .button-green {background-color: #4CAF50;} /* Green */
 .button-blue {background-color: #008CBA;} /* Green */
-.button-red {background-color: #f44336;} /* Red */ 
-.button-gray {background-color: #e7e7e7; color: black;} /* Gray */ 
+.button-red {background-color: #f44336;} /* Red */
+.button-gray {background-color: #e7e7e7; color: black;} /* Gray */
 .button-black {background-color: #555555;} /* Black */
 body {
-  background-color:	#F8F8FF;
+  background-color:#F8F8FF;
 }
 
 table, td, th {

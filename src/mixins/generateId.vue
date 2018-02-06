@@ -7,8 +7,8 @@ export default {
   },
   methods: {
     generateNextId() {
-      this.id_generator += 1;
-      return this.id_generator;
+      this.id_generator += 1
+      return this.id_generator
     },
     generateIdByObject(objects) {
       objects.map((el) => {

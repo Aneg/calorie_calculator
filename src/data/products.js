@@ -8,4 +8,4 @@ export default [
   { id: 7, name: 'Сыр "Пармизан"', protein: 38, carbohydrate: 4.1, fat: 29, calculus: 431 },
   { id: 8, name: 'Яйцо куриное (белок)', protein: 11, carbohydrate: 0.7, fat: 0.2, calculus: 52 },
   { id: 9, name: 'Яйцо куриное (желток)', protein: 16, carbohydrate: 3.6, fat: 27, calculus: 322 }
-];
+]

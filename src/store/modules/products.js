@@ -1,4 +1,4 @@
-import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
+import { dropOrUpdateObjectById, generateIdByObject, findObjectById } from '@/helpers/helper'
 import products from '@/data/products.js'
 
 const state = {
@@ -45,8 +45,11 @@ const actions = {
 }
 
 const getters = {
-  products : (state) => {
+  products: (state) => {
     return state.products
+  },
+  product: (state) => (id) => {
+    return findObjectById(state.products, id)
   }
 }
 

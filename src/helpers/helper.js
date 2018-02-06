@@ -18,15 +18,15 @@ const copyValue = (value) => {
   return JSON.parse(JSON.stringify(value))
 }
 
-const generateIdByObject = (new_objects, next_id) => {
-  new_objects.map((el) => {
+const generateIdByObject = (newObjects, nextId) => {
+  newObjects.map((el) => {
     if (!el.id) {
-      el.id = next_id;
-      next_id += 1;
+      el.id = nextId
+      nextId += 1
     }
     return el
   })
-  return next_id;
+  return nextId
 }
 
 export { findObjectById, findIndexObjectById, dropOrUpdateObjectById, copyValue, generateIdByObject }

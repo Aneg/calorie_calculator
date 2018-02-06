@@ -22,7 +22,7 @@
         <td><input placeholder="Калории" v-model.lazy="form.calculus"></td>
         <td><button class='button button-green' @click="add">+</button></td>
       </tr>
-      <tr v-for="(product, i) in products" v-bind:key='product.id'>
+      <tr v-for="(product) in products" v-bind:key='product.id'>
         <td><input v-model.lazy="product.name"></td>
         <td><input v-model.lazy="product.protein"></td>
         <td><input v-model.lazy="product.fat"></td>
@@ -35,8 +35,7 @@
 </template>
 
 <script>
-import { copyValue, dropOrUpdateObjectById } from '@/helpers/helper';
-import generateId from '@/mixins/generateId.vue';
+import { copyValue, dropOrUpdateObjectById } from '@/helpers/helper'
 
 export default {
   name: 'Products',
@@ -46,26 +45,26 @@ export default {
       form: {name: '', protein: '', carbohydrate: '', fat: '', calculus: ''}
     }
   },
-  beforeMount() { 
-    this.revertProducts();
+  beforeMount () {
+    this.revertProducts()
   },
-  created() {
-    console.log(this.$store.getters.baskets);
-    this.products = copyValue(this.$store.getters.products);
+  created () {
+    console.log(this.$store.getters.baskets)
+    this.products = copyValue(this.$store.getters.products)
   },
   methods: {
-    add() {
+    add () {
       this.products.unshift(this.form)
       this.form = {name: '', protein: '', carbohydrate: '', fat: '', calculus: ''}
     },
-    drop(id) { 
-      dropOrUpdateObjectById(this.products, id) 
+    drop (id) {
+      dropOrUpdateObjectById(this.products, id)
     },
-    saveProducts() {
-      this.$store.dispatch('saveProducts', this.products);
+    saveProducts () {
+      this.$store.dispatch('saveProducts', this.products)
     },
-    revertProducts() {
-      this.products = copyValue(this.$store.getters.products);
+    revertProducts () {
+      this.products = copyValue(this.$store.getters.products)
     }
   }
 }

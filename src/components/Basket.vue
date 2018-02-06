@@ -20,7 +20,7 @@
         <td>
           <select class="styled-select green rounded" v-model="form.product_id">
             <option disabled value="">Выберите продукт</option>
-            <option v-for='product in products' :value="product.id">{{product.name}}</option>
+            <option v-for='product in products' :value="product.id" :key="product.id">{{product.name}}</option>
           </select>
         <td><input placeholder="Вес" v-model="form.weight"></td>
         <td><button class='button button-green' @click="addToBasket">+</button></td>
@@ -29,38 +29,38 @@
       <td>{{ carbohydrate }}</td>
       <td>{{ calculus }}</td>
       </tr>
-      <tr v-for="(product, i) in basket.list">
+      <tr v-for="(product, i) in basket.list" :key="i">
         <td>{{product.name }}</td>
         <td><input v-model="product.weight"></td>
         <td><button class="button button-red" @click="dropFromBasket(i)">-</button></td>
-        <td>{{ product.weight/100 }}</td>
-        <td>{{product.name }}</td>
-        <td>{{product.name }}</td>
-        <td>{{product.name }}</td>
+        <td>{{ getCountItem('protein', product) }}</td>
+        <td>{{ getCountItem('fat', product) }}</td>
+        <td>{{ getCountItem('carbohydrate', product) }}</td>
+        <td>{{ getCountItem('calculus', product) }}</td>
       </tr>
     </table>
   </div>
 </template>
 
 <script>
-import { copyValue, findObjectById, dropOrUpdateObjectById } from '@/helpers/helper'
+import { copyValue } from '@/helpers/helper'
 export default {
   props: {
     products: Array,
     old_basket: Object
   },
   computed: {
-    protein() { 
-      return this.getCount('protein');
-    }, 
-    carbohydrate() { 
-      return this.getCount('carbohydrate');
-    }, 
-    fat() { 
-      return this.getCount('fat');
-    }, 
-    calculus() { 
-      return this.getCount('calculus');
+    protein () {
+      return this.getCount('protein')
+    },
+    carbohydrate () {
+      return this.getCount('carbohydrate')
+    },
+    fat () {
+      return this.getCount('fat')
+    },
+    calculus () {
+      return this.getCount('calculus')
     }
   },
   data () {
@@ -69,36 +69,41 @@ export default {
       basket: []
     }
   },
-  beforeMount() { 
-    this.revert() 
+  beforeMount () {
+    this.revert()
   },
   methods: {
-    getCount(name) {
+    getCountItem (name, product) {
+      return (this.getProductById(product.product_id)[name] * product.weight / 100).toFixed(1)
+    },
+    getProductById (id) {
+      return this.$store.getters.product(id)
+    },
+    getCount (name) {
       var protein = 0
       this.basket.list.forEach((item) => {
         // TODO: выводить ошибку, если продукт не найден.
-        protein += findObjectById(this.products, item.product_id)[name]*item.weight/100
+        protein += this.getProductById(item.product_id)[name] * item.weight / 100
       })
-      return protein.toFixed(1);
+      return protein.toFixed(1)
     },
     addToBasket () {
-      this.form.name = findObjectById(this.products, this.form.product_id).name
+      this.form.name = this.getProductById(this.form.product_id).name
       this.basket.list.unshift(this.form)
       this.form = {product_id: '', weight: ''}
     },
-    dropFromBasket(key) {
+    dropFromBasket (key) {
       this.basket.list.splice(key, 1)
-      // this.$emit('dropOrupdateBasket', this.basket.id, this.basket)  
     },
-    drop() {
+    drop () {
       this.$emit('dropOrupdateBasket', this.basket.id)
     },
-    save() {
+    save () {
       this.$emit('dropOrupdateBasket', this.basket.id, this.basket)
     },
-    revert() {
+    revert () {
       this.basket = copyValue(this.old_basket)
-    },
+    }
   }
 }
 </script>

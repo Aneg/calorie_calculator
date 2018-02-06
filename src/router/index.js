@@ -6,7 +6,7 @@ import Calculator from '@/components/Calculator'
 Vue.use(Router)
 
 export default new Router({
-  model: 'history',
+  mode: 'history',
   routes: [
     {
       path: '/products',
