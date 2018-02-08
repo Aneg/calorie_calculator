@@ -49,7 +49,17 @@ const getters = {
     return state.products
   },
   product: (state) => (id) => {
+    console.log('Шлёп!')
     return findObjectById(state.products, id)
+  },
+  totalCount: (state, getters) => (id, weight, name = null) => {
+    let product = getters.product(id)
+    return name !== null ? getters.product(id)[name] * weight / 100
+      : { protein: product['protein'] * weight / 100,
+        fat: product['fat'] * weight / 100,
+        carbohydrate: product['carbohydrate'] * weight / 100,
+        calculus: product['calculus'] * weight / 100
+      }
   }
 }
 

@@ -24,19 +24,20 @@
           </select>
         <td><input placeholder="Вес" v-model="form.weight"></td>
         <td><button class='button button-green' @click="addToBasket">+</button></td>
-        <td>{{ protein }}</td>
-      <td>{{ fat }}</td>
-      <td>{{ carbohydrate }}</td>
-      <td>{{ calculus }}</td>
+        <td>{{ protein | fixedone }}</td>
+        <td>{{ fat | fixedone }}</td>
+        <td>{{ carbohydrate | fixedone }}</td>
+        <td>{{ calculus | fixedone }}</td>
       </tr>
       <tr v-for="(product, i) in basket.list" :key="i">
         <td>{{product.name }}</td>
         <td><input v-model="product.weight"></td>
         <td><button class="button button-red" @click="dropFromBasket(i)">-</button></td>
-        <td>{{ getCountItem('protein', product) }}</td>
-        <td>{{ getCountItem('fat', product) }}</td>
-        <td>{{ getCountItem('carbohydrate', product) }}</td>
-        <td>{{ getCountItem('calculus', product) }}</td>
+        <!-- <td v-for="count in $store.getters.totalCount(product.product_id, product.weight)" :key="count"> {{ count | fixedone }}</td> -->
+        <td>{{ getCountItem('protein', product) | fixedone }}</td>
+        <td>{{ getCountItem('fat', product) | fixedone }}</td>
+        <td>{{ getCountItem('carbohydrate', product) | fixedone }}</td>
+        <td>{{ getCountItem('calculus', product)| fixedone }}</td>
       </tr>
     </table>
   </div>
@@ -61,6 +62,10 @@ export default {
     },
     calculus () {
       return this.getCount('calculus')
+    },
+    getCountItem (...args) {
+      console.log(args)
+      // return this.$store.getters.totalCount(product.product_id, name, product.weight)
     }
   },
   data () {
@@ -73,9 +78,6 @@ export default {
     this.revert()
   },
   methods: {
-    getCountItem (name, product) {
-      return (this.getProductById(product.product_id)[name] * product.weight / 100).toFixed(1)
-    },
     getProductById (id) {
       return this.$store.getters.product(id)
     },
@@ -83,9 +85,10 @@ export default {
       var protein = 0
       this.basket.list.forEach((item) => {
         // TODO: выводить ошибку, если продукт не найден.
-        protein += this.getProductById(item.product_id)[name] * item.weight / 100
+        protein += this.getCountItem(name, item)
+        this.getProductById(item.product_id)[name] * item.weight / 100
       })
-      return protein.toFixed(1)
+      return protein
     },
     addToBasket () {
       this.form.name = this.getProductById(this.form.product_id).name

@@ -5,9 +5,6 @@
       <router-link to="/" tag='a'>Корзина</router-link>
     </div>
     <router-view/>
-    <!-- <Products></Products>
-    <hr/>
-    <Calculator></Calculator> -->
   </div>
 </template>
 

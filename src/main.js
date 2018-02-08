@@ -16,6 +16,10 @@ import store from '@/store/store'
 
 Vue.config.productionTip = false
 
+Vue.filter('fixedone', function (value) {
+  return value.toFixed(1)
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
