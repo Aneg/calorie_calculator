@@ -30,7 +30,8 @@ const actions = {
   addProduct: ({commit}, payload) => {
     commit('ADD_PRODUCT', payload)
   },
-  setProducts: ({commit}) => {
+  setProducts: ({commit, getters}) => {
+    products.map((el) => { el.hash = getters.getHash })
     commit('SET_PRODUCTS', products)
   },
   saveProducts: ({commit}, products) => {
@@ -46,9 +47,11 @@ const actions = {
 
 const getters = {
   products: (state) => {
+    console.log(state.products)
     return state.products
   },
   product: (state) => (id) => {
+    console.log('ШЛЁП!!!')
     return state.products.find((el) => { return el.id === id })
   },
   totalCount: (state, getters) => (id, weight) => {

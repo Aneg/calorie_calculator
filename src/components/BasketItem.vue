@@ -11,7 +11,7 @@
 </template>
 
 <script>
-// import { copyValue } from '@/helpers/helper'
+
 export default {
   props: {
     product: Object,
@@ -24,7 +24,6 @@ export default {
     }
   },
   beforeMount () {
-    debugger
     this.weight = this.oldWeight
   },
   drop () {

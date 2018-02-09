@@ -103,6 +103,7 @@ export default {
       this.basket.list.splice(key, 1)
     },
     saveItem (data) {
+      this.$actions.save(id, basket)
       this.basket.list[data.key].weight = data.weight
     },
     drop () {
