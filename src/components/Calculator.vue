@@ -5,7 +5,7 @@
       <table>
         <caption>
         </caption>
-        <tr>    
+        <tr>
           <th>Белки</th>
           <th>Жиры</th>
           <th>Углеводы</th>
@@ -51,7 +51,7 @@ export default {
       return this.getCount('calculus')
     },
     products () {
-      return this.$store.getters.products;
+      return this.$store.getters.products
     }
   },
   components: {

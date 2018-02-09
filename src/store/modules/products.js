@@ -1,4 +1,4 @@
-import { dropOrUpdateObjectById, generateIdByObject, findObjectById } from '@/helpers/helper'
+import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
 import products from '@/data/products.js'
 
 const state = {
@@ -49,17 +49,19 @@ const getters = {
     return state.products
   },
   product: (state) => (id) => {
-    console.log('Шлёп!')
-    return findObjectById(state.products, id)
+    return state.products.find((el) => { return el.id === id })
   },
-  totalCount: (state, getters) => (id, weight, name = null) => {
+  totalCount: (state, getters) => (id, weight) => {
     let product = getters.product(id)
-    return name !== null ? getters.product(id)[name] * weight / 100
-      : { protein: product['protein'] * weight / 100,
-        fat: product['fat'] * weight / 100,
-        carbohydrate: product['carbohydrate'] * weight / 100,
-        calculus: product['calculus'] * weight / 100
-      }
+    return { name: product.name,
+      protein: product.protein * weight / 100,
+      fat: product.fat * weight / 100,
+      carbohydrate: product.carbohydrate * weight / 100,
+      calculus: product.calculus * weight / 100
+    }
+  },
+  totalCountByName: (state, getters) => (id, name, weight) => {
+    return getters.product(id)[name] * weight / 100
   }
 }
 

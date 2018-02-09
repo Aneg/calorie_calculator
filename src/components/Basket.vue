@@ -22,33 +22,34 @@
             <option disabled value="">Выберите продукт</option>
             <option v-for='product in products' :value="product.id" :key="product.id">{{product.name}}</option>
           </select>
-        <td><input placeholder="Вес" v-model="form.weight"></td>
+        <td><input placeholder="Вес" v-model.number="form.weight"></td>
         <td><button class='button button-green' @click="addToBasket">+</button></td>
         <td>{{ protein | fixedone }}</td>
         <td>{{ fat | fixedone }}</td>
         <td>{{ carbohydrate | fixedone }}</td>
         <td>{{ calculus | fixedone }}</td>
       </tr>
-      <tr v-for="(product, i) in basket.list" :key="i">
-        <td>{{product.name }}</td>
-        <td><input v-model="product.weight"></td>
-        <td><button class="button button-red" @click="dropFromBasket(i)">-</button></td>
-        <!-- <td v-for="count in $store.getters.totalCount(product.product_id, product.weight)" :key="count"> {{ count | fixedone }}</td> -->
-        <td>{{ getCountItem('protein', product) | fixedone }}</td>
-        <td>{{ getCountItem('fat', product) | fixedone }}</td>
-        <td>{{ getCountItem('carbohydrate', product) | fixedone }}</td>
-        <td>{{ getCountItem('calculus', product)| fixedone }}</td>
-      </tr>
+      <basket-item v-for="(product, i) in basket.list"
+        :product="getCountItem(product)"
+        :oldWeight="product.weight"
+        :key="i"
+        :keyItem="i"
+         @drop='dropItem'
+         @save='saveItem'/>
     </table>
   </div>
 </template>
 
 <script>
 import { copyValue } from '@/helpers/helper'
+import BasketItem from '@/components/BasketItem.vue'
 export default {
   props: {
     products: Array,
     old_basket: Object
+  },
+  components: {
+    basketItem: BasketItem
   },
   computed: {
     protein () {
@@ -62,15 +63,11 @@ export default {
     },
     calculus () {
       return this.getCount('calculus')
-    },
-    getCountItem (...args) {
-      console.log(args)
-      // return this.$store.getters.totalCount(product.product_id, name, product.weight)
     }
   },
   data () {
     return {
-      form: {product_id: '', weight: ''},
+      form: { product_id: '', weight: '' },
       basket: []
     }
   },
@@ -78,6 +75,10 @@ export default {
     this.revert()
   },
   methods: {
+    // TODO: перенести в computed
+    getCountItem (product) {
+      return this.$store.getters.totalCount(product.product_id, product.weight)
+    },
     getProductById (id) {
       return this.$store.getters.product(id)
     },
@@ -85,18 +86,24 @@ export default {
       var protein = 0
       this.basket.list.forEach((item) => {
         // TODO: выводить ошибку, если продукт не найден.
-        protein += this.getCountItem(name, item)
-        this.getProductById(item.product_id)[name] * item.weight / 100
+        protein += this.$store.getters.totalCountByName(item.product_id, name, item.weight)
       })
       return protein
     },
+    //
     addToBasket () {
-      this.form.name = this.getProductById(this.form.product_id).name
-      this.basket.list.unshift(this.form)
-      this.form = {product_id: '', weight: ''}
+      this.basket.list.unshift({
+        product_id: this.form.product_id,
+        weight: this.form.weight,
+        name: this.getProductById(this.form.product_id).name })
+      // debugger
+      this.form = { product_id: '', weight: '' }
     },
-    dropFromBasket (key) {
+    dropItem (key) {
       this.basket.list.splice(key, 1)
+    },
+    saveItem (data) {
+      this.basket.list[data.key].weight = data.weight
     },
     drop () {
       this.$emit('dropOrupdateBasket', this.basket.id)
