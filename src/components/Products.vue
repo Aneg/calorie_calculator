@@ -1,81 +1,57 @@
 <template>
-  <div class="products">
-    <table border="1">
-      <caption>
-        Список продуктов
-        <button class='button button-blue' @click="saveProducts">Сохранить</button>
-        <button class='button button-gray' @click="revertProducts">Восстановить</button>
-      </caption>
-      <tr>
-        <th>Название</th>
-        <th>Белки</th>
-        <th>Жиры</th>
-        <th>Углеводы</th>
-        <th>Калории</th>
-        <th>Действия</th>
-      </tr>
-      <tr>
-        <td><input placeholder="Название" v-model.lazy="form.name"></td>
-        <td><input placeholder="Белки" v-model.lazy="form.protein"></td>
-        <td><input placeholder="Жиры" v-model.lazy="form.fat"></td>
-        <td><input placeholder="Углеводы" v-model.lazy="form.carbohydrate"></td>
-        <td><input placeholder="Калории" v-model.lazy="form.calculus"></td>
-        <td><button class='button button-green' @click="add">+</button></td>
-      </tr>
-      <tr v-for="(product) in products" v-bind:key='product.id'>
-        <td><input v-model.lazy="product.name"></td>
-        <td><input v-model.lazy="product.protein"></td>
-        <td><input v-model.lazy="product.fat"></td>
-        <td><input v-model.lazy="product.carbohydrate"></td>
-        <td><input v-model.lazy="product.calculus"></td>
-        <td><button class="button button-red" @click="drop(product.id)">-</button></td>
-      </tr>
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Название</th>
+          <th scope="col">Белки</th>
+          <th scope="col">Жиры</th>
+          <th scope="col">Углеводы</th>
+          <th scope="col">Калорийность</th>
+          <th scope="col">
+            <router-link :to="{ name: 'create'}" tag='button' active-class="" class="btn btn-success btn-sm btn-block">Добавить</router-link>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="product in storeProducts" :key="product.hash">
+          <td>{{ product.name }}</td>
+          <td>{{ product.protein }}</td>
+          <td>{{ product.fat }}</td>
+          <td>{{ product.carbohydrate }}</td>
+          <td>{{ product.calories }}</td>
+          <td>
+            <div class="btn-group btn-block" role="group">
+              <router-link :to="{ name: 'product', params: { id: product.id }}" tag='button' active-class="" class="btn btn-primary btn-sm">Изменеить</router-link>
+              <button class="btn btn-danger btn-sm btn-block">Удалить</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>
 
 <script>
-import { copyValue, dropOrUpdateObjectById } from '@/helpers/helper'
-
 export default {
   name: 'Products',
   data () {
     return {
-      products: [],
-      form: {name: '', protein: '', carbohydrate: '', fat: '', calculus: ''}
+      products: []
     }
   },
-  beforeMount () {
-    this.revertProducts()
-  },
-  created () {
-    console.log(this.$store.getters.baskets)
-    this.products = copyValue(this.$store.getters.products)
+  computed: {
+    storeProducts () {
+      return this.$store.getters.products
+    }
   },
   methods: {
-    add () {
-      this.products.unshift(this.form)
-      this.form = {name: '', protein: '', carbohydrate: '', fat: '', calculus: ''}
-    },
-    drop (id) {
-      dropOrUpdateObjectById(this.products, id)
-    },
-    saveProducts () {
-      this.$store.dispatch('saveProducts', this.products)
-    },
-    revertProducts () {
-      this.products = copyValue(this.$store.getters.products)
+    drop () {
+
     }
   }
 }
 </script>
 
 <style scoped>
-.products {
-  margin-bottom: 50px;
-}
-table {
-  margin: 5px 10%;
-  width: 80%;
-}
 </style>

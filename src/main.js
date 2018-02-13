@@ -4,15 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from '@/store/store'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
-// import VueRouter from 'vue-router'
-// import routes from '@/routers'
-
-// Vue.use(VueRouter)
-// const router = new VueRouter({
-//   mode: 'history',
-//   routes
-// });
+Vue.use(VueAxios, axios)
 
 Vue.config.productionTip = false
 

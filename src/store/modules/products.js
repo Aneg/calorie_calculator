@@ -1,5 +1,9 @@
 import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
-import products from '@/data/products.js'
+// import products from '@/data/products.js'
+import axios from 'axios'
+
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://127.0.0.1:8000'
 
 const state = {
   products: [],
@@ -9,7 +13,6 @@ const state = {
 const mutations = {
   'SET_PRODUCTS' (state, products) {
     state.products = products
-    state.next_id = state.products.length + 1
   },
   'SAVE_PRODUCTS' (state, products) {
     state.next_id = generateIdByObject(products, state.next_id)
@@ -28,17 +31,34 @@ const mutations = {
 
 const actions = {
   addProduct: ({commit}, payload) => {
-    commit('ADD_PRODUCT', payload)
+    axios.post('/products/', payload).then((response) => {
+      commit('ADD_PRODUCT', response.data)
+    }, (err) => {
+      console.log(err)
+    })
   },
-  setProducts: ({commit, getters}) => {
-    products.map((el) => { el.hash = getters.getHash })
-    commit('SET_PRODUCTS', products)
+  setProducts: ({commit, getters}, sync) => {
+    axios.get('/products/').then((response) => {
+      commit('SET_PRODUCTS', response.data)
+      // debugger
+      if (sync) {
+        sync(response.data)
+        console.log({sdsd: response.data})
+      }
+    }, (err) => {
+      console.log(err)
+    })
   },
   saveProducts: ({commit}, products) => {
     commit('SAVE_PRODUCTS', products)
   },
   updateProduct: ({commit}, payload) => {
-    commit('UPDATE_PRODUCT', payload)
+    axios.post('/products/' + payload.id, payload).then((response) => {
+      commit('UPDATE_PRODUCT', response.data)
+    }, (err) => {
+      console.log(err)
+    })
+    // commit('UPDATE_PRODUCT', payload)
   },
   dropProduct: ({commit}, payload) => {
     commit('DROP_PRODUCT', payload)
@@ -47,7 +67,7 @@ const actions = {
 
 const getters = {
   products: (state) => {
-    console.log(state.products)
+    // console.log(state.products)
     return state.products
   },
   product: (state) => (id) => {
