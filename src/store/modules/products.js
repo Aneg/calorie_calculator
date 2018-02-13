@@ -1,5 +1,6 @@
 import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
 import products from '@/data/products.js'
+import axios from 'axios'
 
 const state = {
   products: [],
@@ -31,6 +32,12 @@ const actions = {
     commit('ADD_PRODUCT', payload)
   },
   setProducts: ({commit}) => {
+    axios.get('http://127.0.0.1:8000/api/products/').then((response) => {
+      console.log(response.data)
+      // commit('SET_PRODUCTS', { list: response.data })
+    }, (err) => {
+      console.log(err)
+    })
     commit('SET_PRODUCTS', products)
   },
   saveProducts: ({commit}, products) => {
