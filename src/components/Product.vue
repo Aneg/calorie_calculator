@@ -54,22 +54,10 @@ export default {
     }
   },
   created () {
-    console.log('created')
-    this.$store.dispatch('setProducts', this.syncProduct)
     this.syncProduct()
   },
-  wotch: {
-    'productId' (to, from) {
-      console.log('wotch $route')
-      this.$store.dispatch('setProducts', this.syncProduct)
-    //   this.syncProduct()
-    },
+  watch: {
     'storeProduct' (to, from) {
-      console.log('wotch storeProduct')
-      this.syncProduct()
-    },
-    'products' (to, from) {
-      console.log('wotch this.$store.getters.products')
       this.syncProduct()
     }
   },
@@ -90,13 +78,7 @@ export default {
       this.$router.push({name: 'products'})
     },
     syncProduct (products = null) {
-      if (products) {
-        debugger
-        this.product = products.filter((el) => {el.id === this.productId})
-      }
-      let storeProduct = this.storeProduct
-      console.log('syncProduct')
-      this.product = this.productId && storeProduct
+      this.product = this.productId
         ? this.storeProduct
         : this.cleenProduct
     }

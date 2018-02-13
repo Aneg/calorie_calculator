@@ -41,10 +41,10 @@ const actions = {
     axios.get('/products/').then((response) => {
       commit('SET_PRODUCTS', response.data)
       // debugger
-      if (sync) {
-        sync(response.data)
-        console.log({sdsd: response.data})
-      }
+      // if (sync) {
+      //   sync(response.data)
+      //   console.log({sdsd: response.data})
+      // }
     }, (err) => {
       console.log(err)
     })
