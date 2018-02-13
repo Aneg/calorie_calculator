@@ -8,8 +8,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 Vue.use(VueAxios, axios)
-Vue.http.headers.common['Access-Control-Allow-Origin'] = 'http://127.0.0.1:8000'
-Vue.http.headers.common['Access-Control-Request-Method'] = '*'
+// Vue.http.headers.common['Access-Control-Allow-Origin'] = 'http://127.0.0.1:8000'
+// Vue.http.headers.common['Access-Control-Request-Method'] = '*'
 
 Vue.config.productionTip = false
 

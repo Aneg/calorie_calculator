@@ -2,6 +2,10 @@ import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
 import products from '@/data/products.js'
 import axios from 'axios'
 
+axios.defaults.baseURL = 'http://127.0.0.1:8000'
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://127.0.0.1:8000'
+axios.defaults.headers.post['Access-Control-Request-Method'] = '*'
+
 const state = {
   products: [],
   next_id: 0
@@ -32,7 +36,8 @@ const actions = {
     commit('ADD_PRODUCT', payload)
   },
   setProducts: ({commit}) => {
-    axios.get('http://127.0.0.1:8000/api/products/').then((response) => {
+    axios.get('/api/products/').then((response) => {
+      console.log(response.headers)
       console.log(response.data)
       // commit('SET_PRODUCTS', { list: response.data })
     }, (err) => {
