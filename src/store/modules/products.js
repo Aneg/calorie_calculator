@@ -76,11 +76,9 @@ const actions = {
 
 const getters = {
   products: (state) => {
-    // console.log(state.products)
     return state.products
   },
   product: (state) => (id) => {
-    console.log('ШЛЁП!!!')
     return state.products.find((el) => { return el.id === id })
   },
   totalCount: (state, getters) => (id, weight) => {

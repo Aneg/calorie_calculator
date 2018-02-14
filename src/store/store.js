@@ -13,7 +13,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    projects,
-    baskets
+    baskets,
+    projects
   }
 })
