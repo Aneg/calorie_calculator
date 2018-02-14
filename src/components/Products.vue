@@ -23,7 +23,7 @@
           <td>
             <div class="btn-group btn-block" role="group">
               <router-link :to="{ name: 'product', params: { id: product.id }}" tag='button' active-class="" class="btn btn-primary btn-sm">Изменеить</router-link>
-              <button class="btn btn-danger btn-sm btn-block">Удалить</button>
+              <button class="btn btn-danger btn-sm btn-block" @click="drop(product.id)">Удалить</button>
             </div>
           </td>
         </tr>
@@ -46,8 +46,9 @@ export default {
     }
   },
   methods: {
-    drop () {
-
+    drop (id) {
+      console.log(id)
+      this.$store.dispatch('dropProduct', id)
     }
   }
 }

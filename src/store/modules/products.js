@@ -24,27 +24,28 @@ const mutations = {
   'DROP_PRODUCT' (state, id) {
     dropOrUpdateObjectById(state.products, id)
   },
-  'UPDATE_PRODUCT' (state, payload) {
-    dropOrUpdateObjectById(state.products, payload.id, payload.product)
+  'UPDATE_PRODUCT' (state, newProduct) {
+    state.products = state.products.map((product) => {
+      return product.id === newProduct.id ? newProduct : product
+    })
   }
 }
 
 const actions = {
-  addProduct: ({commit}, payload) => {
-    axios.post('/products/', payload).then((response) => {
-      commit('ADD_PRODUCT', response.data)
-    }, (err) => {
-      console.log(err)
+  addProduct: ({commit, getters}, id) => {
+    return new Promise((resolve, reject) => {
+      axios.post('/products/', id).then((response) => {
+        commit('ADD_PRODUCT', response.data)
+        resolve()
+      }, (err) => {
+        console.log(err)
+        reject(err)
+      })
     })
   },
   setProducts: ({commit, getters}, sync) => {
     axios.get('/products/').then((response) => {
       commit('SET_PRODUCTS', response.data)
-      // debugger
-      // if (sync) {
-      //   sync(response.data)
-      //   console.log({sdsd: response.data})
-      // }
     }, (err) => {
       console.log(err)
     })
@@ -52,16 +53,24 @@ const actions = {
   saveProducts: ({commit}, products) => {
     commit('SAVE_PRODUCTS', products)
   },
-  updateProduct: ({commit}, payload) => {
-    axios.post('/products/' + payload.id, payload).then((response) => {
-      commit('UPDATE_PRODUCT', response.data)
+  updateProduct: ({commit}, product) => {
+    return new Promise((resolve, reject) => {
+      axios.put('/products/' + product.id + '/', product).then(
+        (response) => {
+          commit('UPDATE_PRODUCT', response.data)
+          resolve()
+        },
+        (err) => {
+          reject(err)
+        })
+    })
+  },
+  dropProduct: ({commit}, id) => {
+    axios.delete('/products/' + id + '/').then((response) => {
+      commit('DROP_PRODUCT', id)
     }, (err) => {
       console.log(err)
     })
-    // commit('UPDATE_PRODUCT', payload)
-  },
-  dropProduct: ({commit}, payload) => {
-    commit('DROP_PRODUCT', payload)
   }
 }
 

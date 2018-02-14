@@ -7,36 +7,77 @@
         <div class='row'>
           <div class="col-sm-12">
             <div class="form-group">
-              <input v-model.number='product.name' class="form-control" placeholder="Название">
+              <input 
+                v-model.number='product.name' 
+                class="form-control" 
+                v-bind:class="{'is-invalid': errors.name}" 
+                placeholder="Название"
+              >
+              <div class="invalid-feedback" v-if="errors.name">
+                {{ errors.name[0] }}
+              </div>
             </div>
           </div>
           <hr/>
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Белки</label>
-              <input class="form-control" placeholder="Белки" v-model.number='product.protein'>
+              <input 
+                class="form-control" 
+                v-bind:class="{'is-invalid': errors.protein}" 
+                placeholder="Белки" 
+                v-model.number='product.protein'
+              >
+              <div class="invalid-feedback" v-if="errors.protein">
+                {{ errors.protein[0] }}
+              </div>
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Жиры</label>
-              <input class="form-control" placeholder="Жиры" v-model.number='product.fat'>
+              <input 
+                class="form-control" 
+                placeholder="Жиры" 
+                v-model.number='product.fat'
+                v-bind:class="{'is-invalid': errors.fat}"
+              >
+              <div class="invalid-feedback" v-if="errors.fat">
+                {{ errors.fat[0] }}
+              </div>
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Углеводы</label>
-              <input class="form-control" placeholder="Углеводы" v-model.number='product.carbohydrate'>
+              <input 
+                class="form-control" 
+                placeholder="Углеводы" 
+                v-model.number='product.carbohydrate'
+                v-bind:class="{'is-invalid': errors.carbohydrate}"
+              >
+              <div class="invalid-feedback" v-if="errors.carbohydrate">
+                {{ errors.carbohydrate[0] }}
+              </div>
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Калорийность</label>
-              <input class="form-control" placeholder="Калорийность" v-model.number='product.calories'>
+              <input 
+                class="form-control" 
+                placeholder="Калорийность" 
+                v-model.number='product.calories'
+                v-bind:class="{'is-invalid': errors.calories}"
+              >
+              <div class="invalid-feedback" v-if="errors.calories">
+                {{ errors.calories[0] }}
+              </div>
             </div>
           </div>
           <div class="col-sm-12">
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <hr/>
+            <button type="submit" :disabled="disableSubmit" class="btn btn-primary">Сохранить</button>
           </div>
         </div>
       </div>
@@ -50,7 +91,9 @@ export default {
   name: 'Product',
   data () {
     return {
-      product: this.cleenProduct
+      product: this.cleenProduct,
+      disableSubmit: false,
+      errors: {}
     }
   },
   created () {
@@ -70,17 +113,34 @@ export default {
     },
     storeProduct () {
       return this.$store.getters.product(this.productId)
+    },
+    isValidDecimalProtein () {
+      return this.isValidDecimal(this.product.protein)
     }
   },
   methods: {
     save () {
-      this.$store.dispatch(this.productId ? 'updateProduct' : 'addProduct', this.product)
-      this.$router.push({name: 'products'})
+      this.disableSubmit = true
+      this.$store.dispatch(this.productId ? 'updateProduct' : 'addProduct', this.product).then(
+        (result) => {
+          this.disableSubmit = false
+          this.errors = {}
+          this.$router.push({name: 'products'})
+        },
+        (result) => {
+          this.errors = result.response.data
+          this.disableSubmit = false
+        }
+      )
     },
     syncProduct (products = null) {
-      this.product = this.productId
+      let storeProduct = this.storeProduct
+      this.product = this.productId && storeProduct
         ? this.storeProduct
         : this.cleenProduct
+    },
+    isValidDecimal (value) {
+      return value - parseFloat(value) === 0
     }
   }
 }
