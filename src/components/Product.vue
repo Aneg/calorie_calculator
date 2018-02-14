@@ -7,10 +7,10 @@
         <div class='row'>
           <div class="col-sm-12">
             <div class="form-group">
-              <input 
-                v-model.number='product.name' 
-                class="form-control" 
-                v-bind:class="{'is-invalid': errors.name}" 
+              <input
+                v-model.number='product.name'
+                class="form-control"
+                v-bind:class="{'is-invalid': errors.name}"
                 placeholder="Название"
               >
               <div class="invalid-feedback" v-if="errors.name">
@@ -22,10 +22,10 @@
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Белки</label>
-              <input 
-                class="form-control" 
-                v-bind:class="{'is-invalid': errors.protein}" 
-                placeholder="Белки" 
+              <input
+                class="form-control"
+                v-bind:class="{'is-invalid': errors.protein}"
+                placeholder="Белки"
                 v-model.number='product.protein'
               >
               <div class="invalid-feedback" v-if="errors.protein">
@@ -36,9 +36,9 @@
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Жиры</label>
-              <input 
-                class="form-control" 
-                placeholder="Жиры" 
+              <input
+                class="form-control"
+                placeholder="Жиры"
                 v-model.number='product.fat'
                 v-bind:class="{'is-invalid': errors.fat}"
               >
@@ -50,9 +50,9 @@
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Углеводы</label>
-              <input 
-                class="form-control" 
-                placeholder="Углеводы" 
+              <input
+                class="form-control"
+                placeholder="Углеводы"
                 v-model.number='product.carbohydrate'
                 v-bind:class="{'is-invalid': errors.carbohydrate}"
               >
@@ -64,9 +64,9 @@
           <div class="col-sm-3">
             <div class="form-group">
               <label class="text-center col-form-label">Калорийность</label>
-              <input 
-                class="form-control" 
-                placeholder="Калорийность" 
+              <input
+                class="form-control"
+                placeholder="Калорийность"
                 v-model.number='product.calories'
                 v-bind:class="{'is-invalid': errors.calories}"
               >
