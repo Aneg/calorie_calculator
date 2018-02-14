@@ -33,9 +33,9 @@
       <router-link
         :to="{name: 'products-page', params: {page: i}, query: {search: search}}"
         tag='a'
-        class="btn btn-secondary"
+        class="btn"
+        :class="{'btn-secondary': parseInt(i) === parseInt(page), 'btn-outline-secondary': parseInt(i) !== parseInt(page)}"
         v-for="i in pageCount"
-        :disabled="parseInt(i) === parseInt(page)"
         :key="i"
       >
         {{ i }}
