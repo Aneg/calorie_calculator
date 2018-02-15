@@ -50,7 +50,7 @@ export default {
   data () {
     return {
       products: [],
-      sizePage: 4,
+      sizePage: 15,
       pageCount: 1
     }
   },
