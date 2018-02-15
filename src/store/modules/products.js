@@ -1,10 +1,9 @@
 import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
-import products from '@/data/products.js'
+// import products from '@/data/products.js'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://127.0.0.1:8000'
-axios.defaults.headers.post['Access-Control-Request-Method'] = '*'
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://127.0.0.1:8000'
 
 const state = {
   products: [],
@@ -14,7 +13,6 @@ const state = {
 const mutations = {
   'SET_PRODUCTS' (state, products) {
     state.products = products
-    state.next_id = state.products.length + 1
   },
   'SAVE_PRODUCTS' (state, products) {
     state.next_id = generateIdByObject(products, state.next_id)
@@ -26,33 +24,53 @@ const mutations = {
   'DROP_PRODUCT' (state, id) {
     dropOrUpdateObjectById(state.products, id)
   },
-  'UPDATE_PRODUCT' (state, payload) {
-    dropOrUpdateObjectById(state.products, payload.id, payload.product)
+  'UPDATE_PRODUCT' (state, newProduct) {
+    state.products = state.products.map((product) => {
+      return product.id === newProduct.id ? newProduct : product
+    })
   }
 }
 
 const actions = {
-  addProduct: ({commit}, payload) => {
-    commit('ADD_PRODUCT', payload)
+  addProduct: ({commit, getters}, id) => {
+    return new Promise((resolve, reject) => {
+      axios.post('/products/', id).then((response) => {
+        commit('ADD_PRODUCT', response.data)
+        resolve()
+      }, (err) => {
+        console.log(err)
+        reject(err)
+      })
+    })
   },
-  setProducts: ({commit}) => {
-    axios.get('/api/products/').then((response) => {
-      console.log(response.headers)
-      console.log(response.data)
-      // commit('SET_PRODUCTS', { list: response.data })
+  setProducts: ({commit, getters}, sync) => {
+    axios.get('/products/').then((response) => {
+      commit('SET_PRODUCTS', response.data)
     }, (err) => {
       console.log(err)
     })
-    commit('SET_PRODUCTS', products)
   },
   saveProducts: ({commit}, products) => {
     commit('SAVE_PRODUCTS', products)
   },
-  updateProduct: ({commit}, payload) => {
-    commit('UPDATE_PRODUCT', payload)
+  updateProduct: ({commit}, product) => {
+    return new Promise((resolve, reject) => {
+      axios.put('/products/' + product.id + '/', product).then(
+        (response) => {
+          commit('UPDATE_PRODUCT', response.data)
+          resolve()
+        },
+        (err) => {
+          reject(err)
+        })
+    })
   },
-  dropProduct: ({commit}, payload) => {
-    commit('DROP_PRODUCT', payload)
+  dropProduct: ({commit}, id) => {
+    axios.delete('/products/' + id + '/').then((response) => {
+      commit('DROP_PRODUCT', id)
+    }, (err) => {
+      console.log(err)
+    })
   }
 }
 

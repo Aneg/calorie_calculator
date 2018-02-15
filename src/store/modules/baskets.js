@@ -1,13 +1,11 @@
-import { dropOrUpdateObjectById, generateIdByObject, copyValue } from '@/helpers/helper'
+import { dropOrUpdateObjectById, copyValue } from '@/helpers/helper'
 
 const state = {
-  baskets: [],
-  next_id: 0
+  baskets: []
 }
 
 const mutations = {
   'SAVE_BASKETS' (state, baskets) {
-    state.next_id = generateIdByObject(baskets, state.next_id)
     state.baskets = copyValue(baskets)
   },
   'DROP_BASKET' (state, id) {
