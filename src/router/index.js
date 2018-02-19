@@ -11,6 +11,16 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      path: '/products/create',
+      name: 'create',
+      component: Product
+    },
+    {
+      path: '/products/:id/edit',
+      name: 'product',
+      component: Product
+    },
+    {
       path: '/products',
       component: Products,
       children: [
@@ -25,16 +35,6 @@ export default new Router({
           component: ProductsTable
         }
       ]
-    },
-    {
-      path: '/products/create',
-      name: 'create',
-      component: Product
-    },
-    {
-      path: '/products/:id/edit',
-      name: 'product',
-      component: Product
     },
     {
       path: '/calculator',

@@ -128,8 +128,8 @@ export default {
           this.$router.push({name: 'products'})
         },
         (result) => {
-          this.errors = result.response.data
           this.disableSubmit = false
+          this.errors = result.response.data
         }
       )
     },

@@ -2,8 +2,9 @@ import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
 // import products from '@/data/products.js'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://127.0.0.1:8000'
+axios.defaults.baseURL = 'http://lara-project.local/api'
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://lara-project.loca'
+// axios.defaults.headers.post['Authorization'] = 'Bearer 5uP0n2cFKX80YMrew62JtvTky3dyIfayA41fT5OM0nIY9zjLVl9zMK0aUaDu'
 
 const state = {
   products: [],
@@ -34,18 +35,26 @@ const mutations = {
 const actions = {
   addProduct: ({commit, getters}, id) => {
     return new Promise((resolve, reject) => {
-      axios.post('/products/', id).then((response) => {
-        commit('ADD_PRODUCT', response.data)
+      axios.post('/products/', id, {headers: {
+        'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL'
+      }}).then((response) => {
+        debugger
+        commit('ADD_PRODUCT', response.data.data)
         resolve()
       }, (err) => {
+        debugger
         console.log(err)
         reject(err)
       })
     })
   },
   setProducts: ({commit, getters}, sync) => {
-    axios.get('/products/').then((response) => {
-      commit('SET_PRODUCTS', response.data)
+    axios.get('/products', {headers: {
+      'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL',
+      'Access-Control-Allow-Origin': '*'
+    }}).then((response) => {
+      debugger
+      commit('SET_PRODUCTS', response.data.data)
     }, (err) => {
       console.log(err)
     })
@@ -55,9 +64,11 @@ const actions = {
   },
   updateProduct: ({commit}, product) => {
     return new Promise((resolve, reject) => {
-      axios.put('/products/' + product.id + '/', product).then(
+      axios.put('/products/' + product.id + '/', product, {headers: {
+        'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL'
+      }}).then(
         (response) => {
-          commit('UPDATE_PRODUCT', response.data)
+          commit('UPDATE_PRODUCT', response.data.data)
           resolve()
         },
         (err) => {
@@ -66,7 +77,9 @@ const actions = {
     })
   },
   dropProduct: ({commit}, id) => {
-    axios.delete('/products/' + id + '/').then((response) => {
+    axios.delete('/products/' + id + '/', {headers: {
+      'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL'
+    }}).then((response) => {
       commit('DROP_PRODUCT', id)
     }, (err) => {
       console.log(err)
