@@ -1,30 +1,32 @@
 <template>
   <div>
-    <h2>Дневной рацион</h2>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-// import Basket from '@/components/Basket.vue'
-// import { copyValue, dropOrUpdateObjectById } from '@/helpers/helper'
 export default {
+  name: 'Calculator',
   data () {
     return {
-      baskets: []
+      search: ''
+    }
+  },
+  computed: {
+    querySearch () {
+      return this.$route.query.search || ''
+    }
+  },
+  created () {
+    this.search = this.querySearch
+  },
+  methods: {
+    submitSearch () {
+      this.$router.push({name: 'baskets', query: {search: this.search}})
     }
   }
 }
 </script>
 
 <style scoped>
-.table-center {
-  text-align: center;
-}
-.calculator {
-  margin: 0 10%;
-}
-.baskets {
-  margin: 0;
-  padding: 0;
-}
 </style>

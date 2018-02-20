@@ -10,7 +10,7 @@
           <router-link :to="{ name: 'products'}" tag='a' active-class="active" class="nav-item">
             <span class="nav-link">Продукты</span>
           </router-link>
-          <router-link :to="{name: 'calculator'}" tag='a' active-class="active" class="nav-item">
+          <router-link :to="{name: 'baskets'}" tag='a' active-class="active" class="nav-item">
             <span class="nav-link">Калькулятор</span>
           </router-link>
         </ul>

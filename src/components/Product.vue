@@ -4,7 +4,6 @@
     <hr/>
     <form @submit.prevent="save">
       <div class="form-group row">
-        <div class='row'>
           <div class="col-sm-12">
             <div class="form-group">
               <input
@@ -79,7 +78,6 @@
             <hr/>
             <button type="submit" :disabled="disableSubmit" class="btn btn-primary">Сохранить</button>
           </div>
-        </div>
       </div>
     </form>
   </div>

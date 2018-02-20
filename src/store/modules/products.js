@@ -1,9 +1,9 @@
-import { dropOrUpdateObjectById, generateIdByObject } from '@/helpers/helper'
+import { dropOrUpdateObjectById } from '@/helpers/helper'
 // import products from '@/data/products.js'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://lara-project.local/api'
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://lara-project.loca'
+axios.defaults.baseURL = 'http://organaizer-backend.local/api'
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://organaizer-backend.local'
 // axios.defaults.headers.post['Authorization'] = 'Bearer 5uP0n2cFKX80YMrew62JtvTky3dyIfayA41fT5OM0nIY9zjLVl9zMK0aUaDu'
 
 const state = {
@@ -13,10 +13,6 @@ const state = {
 
 const mutations = {
   'SET_PRODUCTS' (state, products) {
-    state.products = products
-  },
-  'SAVE_PRODUCTS' (state, products) {
-    state.next_id = generateIdByObject(products, state.next_id)
     state.products = products
   },
   'ADD_PRODUCT' (state, product) {
@@ -36,13 +32,11 @@ const actions = {
   addProduct: ({commit, getters}, id) => {
     return new Promise((resolve, reject) => {
       axios.post('/products/', id, {headers: {
-        'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL'
+        'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
       }}).then((response) => {
-        debugger
         commit('ADD_PRODUCT', response.data.data)
         resolve()
       }, (err) => {
-        debugger
         console.log(err)
         reject(err)
       })
@@ -50,35 +44,32 @@ const actions = {
   },
   setProducts: ({commit, getters}, sync) => {
     axios.get('/products', {headers: {
-      'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL',
-      'Access-Control-Allow-Origin': '*'
+      'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
+      // 'Access-Control-Allow-Origin': '*'
     }}).then((response) => {
-      debugger
       commit('SET_PRODUCTS', response.data.data)
     }, (err) => {
       console.log(err)
     })
   },
-  saveProducts: ({commit}, products) => {
-    commit('SAVE_PRODUCTS', products)
-  },
   updateProduct: ({commit}, product) => {
     return new Promise((resolve, reject) => {
       axios.put('/products/' + product.id + '/', product, {headers: {
-        'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL'
+        'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
       }}).then(
         (response) => {
           commit('UPDATE_PRODUCT', response.data.data)
           resolve()
         },
         (err) => {
+          console.log(err.response)
           reject(err)
         })
     })
   },
   dropProduct: ({commit}, id) => {
     axios.delete('/products/' + id + '/', {headers: {
-      'Authorization': 'Bearer pirQdACQsW03yDzFiQziD2AIUzVbF9JT19JyslsFDjNRDau7Pd7YZygvzxYL'
+      'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
     }}).then((response) => {
       commit('DROP_PRODUCT', id)
     }, (err) => {

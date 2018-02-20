@@ -4,6 +4,8 @@ import Products from '@/components/Products'
 import Product from '@/components/Product'
 import Calculator from '@/components/Calculator'
 import ProductsTable from '@/components/ProductsTable'
+import BasketsTable from '@/components/BasketsTable'
+import Basket from '@/components/Basket'
 
 Vue.use(Router)
 
@@ -14,6 +16,11 @@ export default new Router({
       path: '/products/create',
       name: 'create',
       component: Product
+    },
+    {
+      path: '/baskets/create',
+      name: 'baskets-create',
+      component: Basket
     },
     {
       path: '/products/:id/edit',
@@ -37,9 +44,16 @@ export default new Router({
       ]
     },
     {
-      path: '/calculator',
-      name: 'calculator',
-      component: Calculator
+      path: '/baskets',
+      name: 'baskets',
+      component: Calculator,
+      children: [
+        {
+          path: '',
+          name: 'baskets',
+          component: BasketsTable
+        }
+      ]
     }
   ]
 })
