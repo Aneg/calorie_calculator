@@ -17,7 +17,7 @@
 <script>
 import { copyValue } from '@/helpers/helper'
 export default {
-  name: 'BasketItemsTable',
+  name: 'BasketItemsTableItem',
   props: ['basketItem'],
   data () {
     return {
@@ -29,10 +29,10 @@ export default {
   },
   watch: {
     'item.weight' (to, from) {
-      this.item.protein = this.item.weight ? this.itemProduct.protein * this.item.weight / 100 : '-'
-      this.item.fat = this.item.weight ? this.itemProduct.fat * this.item.weight / 100 : '-'
-      this.item.carbohydrate = this.item.weight ? this.itemProduct.carbohydrate * this.item.weight / 100 : '-'
-      this.item.calories = this.item.weight ? this.itemProduct.calories * this.item.weight / 100 : '-'
+      this.item.protein = this.item.weight ? this.itemProduct.protein * this.item.weight / 100 : 0
+      this.item.fat = this.item.weight ? this.itemProduct.fat * this.item.weight / 100 : 0
+      this.item.carbohydrate = this.item.weight ? this.itemProduct.carbohydrate * this.item.weight / 100 : 0
+      this.item.calories = this.item.weight ? this.itemProduct.calories * this.item.weight / 100 : 0
     }
   },
   computed: {

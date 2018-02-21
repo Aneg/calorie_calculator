@@ -44,18 +44,17 @@ export default {
   name: 'BasketItemsTable',
   data () {
     return {
-      form: { productId: null, weight: null, protein: '-', fat: '-', carbohydrate: '-', calories: '-', hash: null },
+      form: { productId: null, weight: null, protein: 0, fat: 0, carbohydrate: 0, calories: 0, hash: null },
       basketItems: []
     }
   },
   watch: {
     'isFormChanged' (to, from) {
-      // let product = this.formProduct.find((el) => {parseInt(el.id) === parseInt(to)})
       let need = this.formProduct && this.form.weight
-      this.form.protein = need ? this.formProduct.protein * this.form.weight / 100 : '-'
-      this.form.fat = need ? this.formProduct.fat * this.form.weight / 100 : '-'
-      this.form.carbohydrate = need ? this.formProduct.carbohydrate * this.form.weight / 100 : '-'
-      this.form.calories = need ? this.formProduct.calories * this.form.weight / 100 : '-'
+      this.form.protein = need ? this.formProduct.protein * this.form.weight / 100 : 0
+      this.form.fat = need ? this.formProduct.fat * this.form.weight / 100 : 0
+      this.form.carbohydrate = need ? this.formProduct.carbohydrate * this.form.weight / 100 : 0
+      this.form.calories = need ? this.formProduct.calories * this.form.weight / 100 : 0
     }
   },
   computed: {
