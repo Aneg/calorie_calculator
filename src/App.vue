@@ -26,6 +26,7 @@ export default {
   name: 'App',
   created () {
     this.$store.dispatch('setProducts')
+    this.$store.dispatch('setBaskets')
   }
 }
 </script>

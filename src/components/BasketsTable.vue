@@ -22,8 +22,8 @@
           <td>{{ basket.calories }}</td>
           <td>
             <div class="btn-group flex-container" role="group">
-              <router-link :to="{ name: 'product', params: { id: product.id }}" tag='button' active-class="" class="btn btn-outline-primary btn-sm flex-item">Изменеить</router-link>
-              <button class="btn btn-outline-danger btn-sm flex-item" @click="drop(product.id)">Удалить</button>
+              <router-link :to="{ name: 'basket', params: { id: basket.id }}" tag='button' active-class="" class="btn btn-outline-primary btn-sm flex-item">Изменеить</router-link>
+              <button class="btn btn-outline-danger btn-sm flex-item" @click="drop(basket.id)">Удалить</button>
             </div>
           </td>
         </tr>
@@ -31,7 +31,7 @@
     </table>
     <div class="btn-group " role="group" aria-label="">
       <router-link
-        :to="{name: 'products-page', params: {page: i}, query: {search: search}}"
+        :to="{name: 'baskets-page', params: {page: i}, query: {search: search}}"
         tag='a'
         class="btn"
         :class="{'btn-secondary': parseInt(i) === parseInt(page), 'btn-outline-secondary': parseInt(i) !== parseInt(page)}"
@@ -83,7 +83,7 @@ export default {
   methods: {
     drop (id) {
       console.log(id)
-      this.$store.dispatch('dropProduct', id)
+      this.$store.dispatch('dropBasket', id)
     }
   }
 }

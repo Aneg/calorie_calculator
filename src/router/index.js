@@ -28,6 +28,11 @@ export default new Router({
       component: Product
     },
     {
+      path: '/baskets/:id/edit',
+      name: 'basket',
+      component: Basket
+    },
+    {
       path: '/products',
       component: Products,
       children: [
@@ -51,6 +56,11 @@ export default new Router({
         {
           path: '',
           name: 'baskets',
+          component: BasketsTable
+        },
+        {
+          path: ':page',
+          name: 'baskets-page',
           component: BasketsTable
         }
       ]

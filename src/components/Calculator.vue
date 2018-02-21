@@ -9,21 +9,21 @@ export default {
   name: 'Calculator',
   data () {
     return {
-      search: ''
+      // search: ''
     }
   },
   computed: {
-    querySearch () {
-      return this.$route.query.search || ''
-    }
+    // querySearch () {
+    //   return this.$route.query.search || ''
+    // }
   },
   created () {
-    this.search = this.querySearch
+    // this.search = this.querySearch
   },
   methods: {
-    submitSearch () {
-      this.$router.push({name: 'baskets', query: {search: this.search}})
-    }
+    // submitSearch () {
+    //   this.$router.push({name: 'baskets', query: {search: this.search}})
+    // }
   }
 }
 </script>

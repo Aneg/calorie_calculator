@@ -1,6 +1,9 @@
 <template>
   <div class="basket">
-    <h2>Добавленеие продукта</h2>
+    <h2>
+      {{ basketId ? 'Редактирование ' + basket.name : 'Добавленеие продукта' }}
+      <button type="submit" :disabled="disableSubmit" class="btn btn-primary btn-sm float-right">Сохранить изменения</button
+    ></h2>
     <hr/>
     <form @submit.prevent="save">
       <div class="form-group row">
@@ -17,16 +20,17 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-12">
+          <div v-if="!basketId" class="col-sm-12">
             <button type="submit" :disabled="disableSubmit" class="btn btn-primary">Сохранить</button>
           </div>
       </div>
     </form>
+    <basket-items-table v-if="basketId" />
   </div>
 </template>
 
 <script>
-
+import BasketItemsTable from '@/components/BasketItemsTable'
 export default {
   name: 'Basket',
   data () {
@@ -79,6 +83,9 @@ export default {
     isValidDecimal (value) {
       return value - parseFloat(value) === 0
     }
+  },
+  components: {
+    basketItemsTable: BasketItemsTable
   }
 }
 </script>

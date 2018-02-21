@@ -30,11 +30,9 @@ const actions = {
       axios.post('/baskets/', id, {headers: {
         'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
       }}).then((response) => {
-        debugger
         commit('ADD_BASKET', response.data.data)
         resolve()
       }, (err) => {
-        debugger
         console.log(err)
         reject(err)
       })
@@ -45,7 +43,6 @@ const actions = {
       'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
       // 'Access-Control-Allow-Origin': '*'
     }}).then((response) => {
-      debugger
       commit('SET_BASKETS', response.data.data)
     }, (err) => {
       console.log(err)
@@ -57,12 +54,10 @@ const actions = {
         'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
       }}).then(
         (response) => {
-          debugger
           commit('UPDATE_BASKET', response.data.data)
           resolve()
         },
         (err) => {
-          debugger
           console.log(err.response)
           reject(err)
         })
