@@ -9,7 +9,7 @@
   <td>{{ item.carbohydrate | fixedone }}</td>
   <td>{{ item.calories | fixedone }}</td>
   <td>
-    <button class="btn btn-outline-danger btn-sm  btn-block" @click="drop(basket.id)">Удалить</button>
+    <button class="btn btn-outline-danger btn-sm  btn-block" @click="drop(basketItem)">Удалить</button>
   </td>
 </tr>
 </template>
@@ -41,6 +41,9 @@ export default {
     }
   },
   methods: {
+    drop (basketItem) {
+      this.$emit('drop', basketItem)
+    }
   }
 }
 </script>

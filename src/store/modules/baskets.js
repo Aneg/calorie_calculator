@@ -4,6 +4,7 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'http://organaizer-backend.local/api'
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://organaizer-backend.local'
+axios.defaults.headers.put['Access-Control-Allow-Origin'] = 'http://organaizer-backend.local'
 
 const state = {
   baskets: []
@@ -48,9 +49,11 @@ const actions = {
       console.log(err)
     })
   },
-  updateBasket: ({commit}, baskets) => {
+  updateBasket: ({commit}, basket) => {
     return new Promise((resolve, reject) => {
-      axios.put('/baskets/' + baskets.id + '/', baskets, {headers: {
+      axios.put('/baskets/' + basket.id + '/', basket, {headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
         'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
       }}).then(
         (response) => {

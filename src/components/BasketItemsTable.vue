@@ -31,7 +31,7 @@
               <button class="btn btn-outline-success btn-block btn-sm flex-item" @click="add">Добавить</button>
           </td>
         </tr>
-        <basket-items-table-item v-for="item in basketItems" :key="item.hash" :basketItem="item"/>
+        <basket-items-table-item v-for="item in basketItems" :key="item.hash" :basketItem="item" @drop="drop"/>
       </tbody>
     </table>
   </div>
@@ -77,6 +77,9 @@ export default {
       this.form.name = this.formProduct.name
       this.basketItems.push(copyValue(this.form))
       this.form = { productId: null, weight: null, protein: '-', fat: '-', carbohydrate: '-', calories: '-', hash: null }
+    },
+    drop (basketItem) {
+      this.basketItems.splice(this.basketItems.indexOf(basketItem), 1)
     }
   },
   components: {

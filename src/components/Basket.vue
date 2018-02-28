@@ -2,7 +2,7 @@
   <div class="basket">
     <h2>
       {{ basketId ? 'Редактирование ' + basket.name : 'Добавленеие продукта' }}
-      <button type="submit" :disabled="disableSubmit" class="btn btn-primary btn-sm float-right">Сохранить изменения</button
+      <button type="submit" :disabled="disableSubmit" @click="save" class="btn btn-primary btn-sm float-right">Сохранить изменения</button
     ></h2>
     <hr/>
     <form @submit.prevent="save">
