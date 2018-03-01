@@ -12,7 +12,7 @@ Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 
 Vue.filter('fixedone', function (value) {
-  return value.toFixed(1)
+  return value ? value.toFixed(1) : 0
 })
 
 /* eslint-disable no-new */

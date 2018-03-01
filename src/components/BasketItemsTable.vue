@@ -25,27 +25,28 @@
           </td>
           <td>{{ form.protein | fixedone }}</td>
           <td>{{ form.fat | fixedone }}</td>
-          <td>{{ form.carbohydrate | fixedone}}</td>
+          <td>{{ form.carbohydrate | fixedone }}</td>
           <td>{{ form.calories | fixedone }}</td>
           <td>
               <button class="btn btn-outline-success btn-block btn-sm flex-item" @click="add">Добавить</button>
           </td>
         </tr>
-        <basket-items-table-item v-for="item in basketItems" :key="item.hash" :basketItem="item" @drop="drop"/>
+        <basket-items-table-item v-for="item in items" :key="item.productId" :basketItem="item" @drop="drop" @sync="syncItem" />
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-import { copyValue } from '@/helpers/helper'
+// import { copyValue } from '@/helpers/helper'
 import BasketItemsTableItemVue from './BasketItemsTableItem.vue'
 export default {
   name: 'BasketItemsTable',
+  props: ['basektItems'],
   data () {
     return {
-      form: { productId: null, weight: null, protein: 0, fat: 0, carbohydrate: 0, calories: 0, hash: null },
-      basketItems: []
+      form: { productId: null, weight: null, protein: '', fat: '', carbohydrate: '', calories: '', hash: null },
+      items: []
     }
   },
   watch: {
@@ -55,14 +56,25 @@ export default {
       this.form.fat = need ? this.formProduct.fat * this.form.weight / 100 : 0
       this.form.carbohydrate = need ? this.formProduct.carbohydrate * this.form.weight / 100 : 0
       this.form.calories = need ? this.formProduct.calories * this.form.weight / 100 : 0
+    },
+    // 'items' (to, from) {
+    //   this.$emit('syncItems', to)
+    // },
+    'stageItems' (to, from) {
+      if (!this.items || this.items.length === 0) {
+        this.items = to
+      }
     }
   },
+  created () {
+    this.items = this.stageItems
+  },
   computed: {
+    stageItems () {
+      return this.basektItems
+    },
     isFormChanged () {
       return this.form.productId + this.form.weight
-    },
-    basketProdukts () {
-      return []
     },
     products () {
       return this.$store.getters.products
@@ -73,13 +85,20 @@ export default {
   },
   methods: {
     add () {
-      this.form.hash = this.$store.getters.getHash
-      this.form.name = this.formProduct.name
-      this.basketItems.push(copyValue(this.form))
+      let product = this.items.find((el) => el.productId === this.form.productId)
+      if (!product) {
+        this.items.push({ hash: this.$store.getters.getHash, productId: this.form.productId, weight: this.form.weight })
+      } else {
+        product.weight = parseInt(product.weight) + parseInt(this.form.weight)
+      }
       this.form = { productId: null, weight: null, protein: '-', fat: '-', carbohydrate: '-', calories: '-', hash: null }
     },
-    drop (basketItem) {
-      this.basketItems.splice(this.basketItems.indexOf(basketItem), 1)
+    drop (item) {
+      this.items.splice(this.items.indexOf(item), 1)
+    },
+    syncItem (item) {
+      this.items.splice(this.items.indexOf(this.items.find((el) => el.hash === item.hash)), 1, item)
+      this.$emit('syncItems', this.items)
     }
   },
   components: {

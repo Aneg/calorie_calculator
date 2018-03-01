@@ -1,13 +1,13 @@
 <template>
 <tr>
-  <td>{{ item.name }}</td>
+  <td>{{ product.name }}</td>
   <td>
-    <input v-model.number="item.weight" class="form-control" type="number">
+    <input v-model.number="weight" class="form-control" type="number">
   </td>
-  <td>{{ item.protein | fixedone }}</td>
-  <td>{{ item.fat | fixedone }}</td>
-  <td>{{ item.carbohydrate | fixedone }}</td>
-  <td>{{ item.calories | fixedone }}</td>
+  <td>{{ protein | fixedone }}</td>
+  <td>{{ fat | fixedone }}</td>
+  <td>{{ carbohydrate | fixedone }}</td>
+  <td>{{ calories | fixedone }}</td>
   <td>
     <button class="btn btn-outline-danger btn-sm  btn-block" @click="drop(basketItem)">Удалить</button>
   </td>
@@ -15,34 +15,73 @@
 </template>
 
 <script>
-import { copyValue } from '@/helpers/helper'
 export default {
   name: 'BasketItemsTableItem',
   props: ['basketItem'],
   data () {
     return {
-      item: {}
+      name: '',
+      productId: 0,
+      weight: 0,
+      carbohydrate: 0,
+      protein: 0,
+      fat: 0,
+      calories: 0
     }
   },
   created () {
-    this.item = copyValue(this.basketItem)
+    this.initData(this.basketItem)
   },
   watch: {
-    'item.weight' (to, from) {
-      this.item.protein = this.item.weight ? this.itemProduct.protein * this.item.weight / 100 : 0
-      this.item.fat = this.item.weight ? this.itemProduct.fat * this.item.weight / 100 : 0
-      this.item.carbohydrate = this.item.weight ? this.itemProduct.carbohydrate * this.item.weight / 100 : 0
-      this.item.calories = this.item.weight ? this.itemProduct.calories * this.item.weight / 100 : 0
+    'weight' (to, from) {
+      this.calculate()
+      if (this.weight !== 0) {
+        debugger
+        this.$emit('sync', {
+          productId: this.productId,
+          weight: this.weight,
+          protein: this.protein,
+          fat: this.fat,
+          carbohydrate: this.carbohydrate,
+          calories: this.calories,
+          hash: this.basketItem.hash
+        })
+      }
+    },
+    'product' (to, from) {
+      this.calculate()
+    },
+    'basketItem.weight' (to, from) {
+      this.initData(this.basketItem)
+      this.calculate()
     }
   },
   computed: {
-    itemProduct () {
-      return this.$store.getters.product(this.item.productId)
+    stageItem () {
+      return this.basketItem
+    },
+    product () {
+      return this.$store.getters.product(this.productId) || { name: '', protein: 0, fat: 0, carbohydrate: 0, calories: 0, hash: null }
     }
   },
   methods: {
+    calculate () {
+      this.fat = parseInt(this.weight) ? parseFloat(this.product.fat) * parseInt(this.weight) / 100 : 0
+      this.protein = parseInt(this.weight) ? parseFloat(this.product.protein) * parseInt(this.weight) / 100 : 0
+      this.carbohydrate = parseInt(this.weight) ? parseFloat(this.product.carbohydrate) * parseInt(this.weight) / 100 : 0
+      this.calories = parseInt(this.weight) ? parseFloat(this.product.calories) * parseInt(this.weight) / 100 : 0
+    },
     drop (basketItem) {
       this.$emit('drop', basketItem)
+    },
+    initData (item) {
+      // debugger
+      this.productId = item.productId
+      this.weight = item.weight
+      this.carbohydrate = item.carbohydrate ? item.carbohydrate : 0
+      this.protein = item.protein ? item.carbohydrproteinate : 0
+      this.fat = item.fat ? item.fat : 0
+      this.calories = item.calories ? item.calories : 0
     }
   }
 }

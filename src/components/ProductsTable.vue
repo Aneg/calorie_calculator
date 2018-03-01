@@ -49,7 +49,6 @@ export default {
   name: 'ProductsTable',
   data () {
     return {
-      products: [],
       sizePage: 15,
       pageCount: 1
     }

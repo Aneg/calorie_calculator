@@ -50,7 +50,7 @@ export default new Router({
     },
     {
       path: '/baskets',
-      name: 'baskets',
+      // name: 'baskets_base',
       component: Calculator,
       children: [
         {

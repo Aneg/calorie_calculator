@@ -49,18 +49,17 @@ export default {
   name: 'BasketsTable',
   data () {
     return {
-      baskets: [],
       sizePage: 15,
       pageCount: 1
     }
   },
   watch: {
-    'searchBaskets' (to, from) {
+    'storeBaskets' (to, from) {
       this.pageCount = Math.ceil(to.length / this.sizePage)
     }
   },
   created () {
-    this.pageCount = Math.ceil(this.searchBaskets.length / this.sizePage)
+    this.pageCount = Math.ceil(this.storeBaskets.length / this.sizePage)
   },
   computed: {
     page () {
@@ -69,12 +68,9 @@ export default {
     storeBaskets () {
       return this.$store.getters.baskets
     },
-    searchBaskets () {
-      return this.storeBaskets.filter((el) => el.name.includes(this.search))
-    },
     basketsByPage () {
       let start = (this.page - 1) * (this.sizePage)
-      return this.searchBaskets.slice(start, start + this.sizePage)
+      return this.storeBaskets.slice(start, start + this.sizePage)
     },
     search () {
       return this.$route.query.search || ''
@@ -82,7 +78,6 @@ export default {
   },
   methods: {
     drop (id) {
-      console.log(id)
       this.$store.dispatch('dropBasket', id)
     }
   }

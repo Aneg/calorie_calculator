@@ -20,8 +20,10 @@ const mutations = {
   'DROP_BASKET' (state, id) {
     dropOrUpdateObjectById(state.baskets, id)
   },
-  'UPDATE_BASKET' (state, payload) {
-    dropOrUpdateObjectById(state.baskets, payload.id, payload.basket)
+  'UPDATE_BASKET' (state, newBasket) {
+    state.baskets = state.baskets.map((basket) => {
+      return basket.id === newBasket.id ? newBasket : basket
+    })
   }
 }
 
@@ -50,10 +52,10 @@ const actions = {
     })
   },
   updateBasket: ({commit}, basket) => {
+    debugger
     return new Promise((resolve, reject) => {
       axios.put('/baskets/' + basket.id + '/', basket, {headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
+        // 'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
       }}).then(
         (response) => {

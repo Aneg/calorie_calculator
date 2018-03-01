@@ -25,32 +25,30 @@
           </div>
       </div>
     </form>
-    <basket-items-table v-if="basketId" />
+    <basket-items-table v-if="basketId" @syncItems="syncItems" :basektItems="items" />
   </div>
 </template>
 
 <script>
 import BasketItemsTable from '@/components/BasketItemsTable'
+import { copyValue } from '@/helpers/helper'
 export default {
   name: 'Basket',
   data () {
     return {
-      basket: this.cleenBasket,
+      basket: {},
       disableSubmit: false,
       errors: {}
     }
   },
-  created () {
-    this.syncBasket()
-  },
   watch: {
     'storeBasket' (to, from) {
-      this.syncBasket()
+      this.pullStageBasket()
     }
   },
   computed: {
-    cleenBasket () {
-      return { name: '', protein: '', fat: '', carbohydrate: '', calories: '' }
+    items () {
+      return this.basket.items
     },
     basketId () {
       return parseInt(this.$route.params.id)
@@ -60,6 +58,9 @@ export default {
     }
   },
   methods: {
+    cleenBasket () {
+      return { name: '', items: [] }
+    },
     save () {
       this.disableSubmit = true
       this.$store.dispatch(this.basketId ? 'updateBasket' : 'addBasket', this.basket).then(
@@ -74,11 +75,15 @@ export default {
         }
       )
     },
-    syncBasket (baskets = null) {
-      let storeBasket = this.storeBasket
+    pullStageBasket () {
+      let storeBasket = copyValue(this.storeBasket)
       this.basket = this.basketId && storeBasket
         ? this.storeBasket
-        : this.cleenBasket
+        : this.cleenBasket()
+    },
+    syncItems (items) {
+      // debugger
+      this.basket.items = items
     },
     isValidDecimal (value) {
       return value - parseFloat(value) === 0
