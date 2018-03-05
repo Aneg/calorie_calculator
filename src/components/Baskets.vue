@@ -1,6 +1,9 @@
 <template>
   <div>
-    <table class="table">
+    <div class="loading" v-if="loading">
+      Загрузка...
+    </div>
+    <table v-if="!loading" class="table">
       <thead>
         <tr>
           <th scope="col">Название</th>
@@ -29,9 +32,9 @@
         </tr>
       </tbody>
     </table>
-    <div class="btn-group " role="group" aria-label="">
+    <div v-if="!loading" class="btn-group " role="group" aria-label="">
       <router-link
-        :to="{name: 'baskets-page', params: {page: i}, query: {search: search}}"
+        :to="{name: 'baskets-page', params: {page: i}}"
         tag='a'
         class="btn"
         :class="{'btn-secondary': parseInt(i) === parseInt(page), 'btn-outline-secondary': parseInt(i) !== parseInt(page)}"
@@ -46,20 +49,21 @@
 
 <script>
 export default {
-  name: 'BasketsTable',
+  name: 'Baskets',
   data () {
     return {
       sizePage: 15,
-      pageCount: 1
+      pageCount: 1,
+      loading: true
     }
   },
   watch: {
-    'storeBaskets' (to, from) {
-      this.pageCount = Math.ceil(to.length / this.sizePage)
+    '$route' (to, from) {
+      this.fetchData()
     }
   },
   created () {
-    this.pageCount = Math.ceil(this.storeBaskets.length / this.sizePage)
+    this.fetchData()
   },
   computed: {
     page () {
@@ -77,6 +81,18 @@ export default {
     }
   },
   methods: {
+    fetchData () {
+      this.loading = true
+      this.$store.dispatch('setBaskets').then(
+        (result) => {
+          this.pageCount = Math.ceil(this.storeBaskets.length / this.sizePage)
+          this.loading = false
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
     drop (id) {
       this.$store.dispatch('dropBasket', id)
     }

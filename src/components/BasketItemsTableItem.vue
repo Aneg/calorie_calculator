@@ -37,7 +37,7 @@ export default {
       this.calculate()
       if (this.weight !== 0) {
         debugger
-        this.$emit('sync', {
+        this.$emit('item', {
           productId: this.productId,
           weight: this.weight,
           protein: this.protein,
@@ -75,7 +75,6 @@ export default {
       this.$emit('drop', basketItem)
     },
     initData (item) {
-      // debugger
       this.productId = item.productId
       this.weight = item.weight
       this.carbohydrate = item.carbohydrate ? item.carbohydrate : 0

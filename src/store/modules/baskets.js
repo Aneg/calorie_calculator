@@ -5,9 +5,11 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://organaizer-backend.local/api'
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://organaizer-backend.local'
 axios.defaults.headers.put['Access-Control-Allow-Origin'] = 'http://organaizer-backend.local'
+const headers = {'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'}
 
 const state = {
-  baskets: []
+  baskets: [],
+  basketTemplate: {}
 }
 
 const mutations = {
@@ -24,15 +26,16 @@ const mutations = {
     state.baskets = state.baskets.map((basket) => {
       return basket.id === newBasket.id ? newBasket : basket
     })
+  },
+  'SET_BASCET_TEMLPATE' (state, basket) {
+    state.basketTemplate = basket
   }
 }
 
 const actions = {
   addBasket: ({commit, getters}, id) => {
     return new Promise((resolve, reject) => {
-      axios.post('/baskets/', id, {headers: {
-        'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-      }}).then((response) => {
+      axios.post('/baskets/', id, {headers: headers}).then((response) => {
         commit('ADD_BASKET', response.data.data)
         resolve()
       }, (err) => {
@@ -41,23 +44,20 @@ const actions = {
       })
     })
   },
-  setBaskets: ({commit, getters}, sync) => {
-    axios.get('/baskets', {headers: {
-      'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-      // 'Access-Control-Allow-Origin': '*'
-    }}).then((response) => {
-      commit('SET_BASKETS', response.data.data)
-    }, (err) => {
-      console.log(err)
+  setBaskets: ({commit, getters}) => {
+    return new Promise((resolve, reject) => {
+      axios.get('/baskets', {headers: headers}).then((response) => {
+        commit('SET_BASKETS', response.data.data)
+        resolve()
+      }, (err) => {
+        console.log(err)
+        reject(err)
+      })
     })
   },
   updateBasket: ({commit}, basket) => {
-    debugger
     return new Promise((resolve, reject) => {
-      axios.put('/baskets/' + basket.id + '/', basket, {headers: {
-        // 'Access-Control-Allow-Origin': '*',
-        'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-      }}).then(
+      axios.put('/baskets/' + basket.id + '/', basket, {headers: headers}).then(
         (response) => {
           commit('UPDATE_BASKET', response.data.data)
           resolve()
@@ -69,12 +69,27 @@ const actions = {
     })
   },
   dropBasket: ({commit}, id) => {
-    axios.delete('/baskets/' + id + '/', {headers: {
-      'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-    }}).then((response) => {
+    axios.delete('/baskets/' + id + '/', {headers: headers}).then((response) => {
       commit('DROP_BASKET', id)
     }, (err) => {
       console.log(err)
+    })
+  },
+  basketTLoad: ({commit, getters}, id) => {
+    return new Promise((resolve, reject) => {
+      if (id) {
+        axios.get('/baskets/' + id + '/', {headers: headers}).then((response) => {
+          // debugger
+          commit('SET_BASCET_TEMLPATE', response.data.data)
+          resolve(response.data.data)
+        }, (err) => {
+          console.log(err)
+          reject(err)
+        })
+      } else {
+        commit('SET_BASCET_TEMLPATE', {name: '', items: []})
+        resolve({name: '', items: []})
+      }
     })
   }
 }
@@ -85,6 +100,18 @@ const getters = {
   },
   basket: (state) => (id) => {
     return state.baskets.find((el) => { return el.id === id })
+  },
+  basketT: (state) => {
+    return state.basketTemplate.name ? state.basketTemplate : null
+  },
+  basketTName: (state) => {
+    return state.basketTemplate.name ? state.basketTemplate.name : null
+  },
+  basketTItems: (state) => {
+    return state.basketTemplate.items ? state.basketTemplate.items : []
+  },
+  basketTItem: (state) => (hash) => {
+    return state.basketTemplate.items.find((el) => el.hash === hash)
   }
 }
 

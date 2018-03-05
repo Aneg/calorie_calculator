@@ -4,7 +4,8 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'http://organaizer-backend.local/api'
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = 'http://organaizer-backend.local'
-// axios.defaults.headers.post['Authorization'] = 'Bearer 5uP0n2cFKX80YMrew62JtvTky3dyIfayA41fT5OM0nIY9zjLVl9zMK0aUaDu'
+
+const headers = {'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'}
 
 const state = {
   products: [],
@@ -31,9 +32,7 @@ const mutations = {
 const actions = {
   addProduct: ({commit, getters}, id) => {
     return new Promise((resolve, reject) => {
-      axios.post('/products/', id, {headers: {
-        'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-      }}).then((response) => {
+      axios.post('/products/', id, {headers: headers}).then((response) => {
         commit('ADD_PRODUCT', response.data.data)
         resolve()
       }, (err) => {
@@ -43,10 +42,7 @@ const actions = {
     })
   },
   setProducts: ({commit, getters}, sync) => {
-    axios.get('/products', {headers: {
-      'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-      // 'Access-Control-Allow-Origin': '*'
-    }}).then((response) => {
+    axios.get('/products', {headers: headers}).then((response) => {
       commit('SET_PRODUCTS', response.data.data)
     }, (err) => {
       console.log(err)
@@ -54,9 +50,7 @@ const actions = {
   },
   updateProduct: ({commit}, product) => {
     return new Promise((resolve, reject) => {
-      axios.put('/products/' + product.id + '/', product, {headers: {
-        'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-      }}).then(
+      axios.put('/products/' + product.id + '/', product, {headers: headers}).then(
         (response) => {
           commit('UPDATE_PRODUCT', response.data.data)
           resolve()
@@ -68,9 +62,7 @@ const actions = {
     })
   },
   dropProduct: ({commit}, id) => {
-    axios.delete('/products/' + id + '/', {headers: {
-      'Authorization': 'Bearer KOPxSTlopKbfJjpgjtj6dxcKyXzjSGCnXC4GfNHB3bi8f0RCqjrOJeuEBdHR'
-    }}).then((response) => {
+    axios.delete('/products/' + id + '/', {headers: headers}).then((response) => {
       commit('DROP_PRODUCT', id)
     }, (err) => {
       console.log(err)

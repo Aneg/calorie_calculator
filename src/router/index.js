@@ -2,9 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Products from '@/components/Products'
 import Product from '@/components/Product'
-import Calculator from '@/components/Calculator'
 import ProductsTable from '@/components/ProductsTable'
-import BasketsTable from '@/components/BasketsTable'
+import Baskets from '@/components/Baskets'
 import Basket from '@/components/Basket'
 
 Vue.use(Router)
@@ -18,19 +17,9 @@ export default new Router({
       component: Product
     },
     {
-      path: '/baskets/create',
-      name: 'baskets-create',
-      component: Basket
-    },
-    {
       path: '/products/:id/edit',
       name: 'product',
       component: Product
-    },
-    {
-      path: '/baskets/:id/edit',
-      name: 'basket',
-      component: Basket
     },
     {
       path: '/products',
@@ -50,20 +39,23 @@ export default new Router({
     },
     {
       path: '/baskets',
-      // name: 'baskets_base',
-      component: Calculator,
-      children: [
-        {
-          path: '',
-          name: 'baskets',
-          component: BasketsTable
-        },
-        {
-          path: ':page',
-          name: 'baskets-page',
-          component: BasketsTable
-        }
-      ]
+      name: 'baskets',
+      component: Baskets
+    },
+    {
+      path: '/baskets/:page',
+      name: 'baskets-page',
+      component: Baskets
+    },
+    {
+      path: '/baskets/:id/edit',
+      name: 'basket',
+      component: Basket
+    },
+    {
+      path: '/baskets/create',
+      name: 'baskets-create',
+      component: Basket
     }
   ]
 })
