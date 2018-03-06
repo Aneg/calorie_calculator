@@ -43,6 +43,11 @@ export default new Router({
       component: Baskets
     },
     {
+      path: '/baskets/create',
+      name: 'baskets-create',
+      component: Basket
+    },
+    {
       path: '/baskets/:page',
       name: 'baskets-page',
       component: Baskets
@@ -50,11 +55,6 @@ export default new Router({
     {
       path: '/baskets/:id/edit',
       name: 'basket',
-      component: Basket
-    },
-    {
-      path: '/baskets/create',
-      name: 'baskets-create',
       component: Basket
     }
   ]

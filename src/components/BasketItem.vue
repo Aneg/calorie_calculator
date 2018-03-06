@@ -2,7 +2,7 @@
 <tr>
   <td>{{ product.name }}</td>
   <td>
-    <input v-model.number="weight" class="form-control" type="number">
+    <input v-model.number="weight" class="form-control" @change="change" type="number">
   </td>
   <td>{{ protein | fixedone }}</td>
   <td>{{ fat | fixedone }}</td>
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'BasketItemsTableItem',
+  name: 'BasketItem',
   props: ['basketItem'],
   data () {
     return {
@@ -35,31 +35,12 @@ export default {
   watch: {
     'weight' (to, from) {
       this.calculate()
-      if (this.weight !== 0) {
-        debugger
-        this.$emit('item', {
-          productId: this.productId,
-          weight: this.weight,
-          protein: this.protein,
-          fat: this.fat,
-          carbohydrate: this.carbohydrate,
-          calories: this.calories,
-          hash: this.basketItem.hash
-        })
-      }
     },
     'product' (to, from) {
-      this.calculate()
-    },
-    'basketItem.weight' (to, from) {
-      this.initData(this.basketItem)
       this.calculate()
     }
   },
   computed: {
-    stageItem () {
-      return this.basketItem
-    },
     product () {
       return this.$store.getters.product(this.productId) || { name: '', protein: 0, fat: 0, carbohydrate: 0, calories: 0, hash: null }
     }
@@ -73,6 +54,17 @@ export default {
     },
     drop (basketItem) {
       this.$emit('drop', basketItem)
+    },
+    change () {
+      this.$emit('sync', {
+        productId: this.productId,
+        weight: this.weight,
+        protein: this.protein,
+        fat: this.fat,
+        carbohydrate: this.carbohydrate,
+        calories: this.calories,
+        hash: this.basketItem.hash
+      })
     },
     initData (item) {
       this.productId = item.productId

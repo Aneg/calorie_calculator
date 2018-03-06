@@ -83,7 +83,7 @@ export default {
   methods: {
     fetchData () {
       this.loading = true
-      this.$store.dispatch('setBaskets').then(
+      this.$store.dispatch('basketsLoad').then(
         (result) => {
           this.pageCount = Math.ceil(this.storeBaskets.length / this.sizePage)
           this.loading = false

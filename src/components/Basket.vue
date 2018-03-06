@@ -6,11 +6,10 @@
     <h2 v-if="basket">
       {{ basketId ? 'Редактирование ' + basket.name : 'Добавленеие продукта' }}
       <button
-        type="submit"
         @click="save"
         class="btn btn-primary btn-sm float-right"
       >
-        Сохранить изменения
+        Сохранить
       </button>
       </h2>
     <hr/>
@@ -25,9 +24,6 @@
                 :disabled="disableSubmit"
               >
             </div>
-          </div>
-          <div v-if="!basketId" class="col-sm-12">
-            <button type="submit" class="btn btn-primary">Сохранить</button>
           </div>
       </div>
     </form>
@@ -62,14 +58,29 @@
               <button :disabled="!formProduct" class="btn btn-outline-success btn-block btn-sm flex-item" @click="addItem">Добавить</button>
           </td>
         </tr>
-        <basket-items-table-item v-for="item in basket.items" :key="item.productId" :basketItem="item" @drop="dropItem"/>
+        <tr>
+          <td>В общем</td>
+          <td></td>
+          <td>{{ all.protein | fixedone }}</td>
+          <td>{{ all.fat | fixedone }}</td>
+          <td>{{ all.carbohydrate | fixedone }}</td>
+          <td>{{ all.calories | fixedone }}</td>
+          <td></td>
+        </tr>
+        <basket-item
+          v-for="item in basket.items"
+          :key="item.productId"
+          :basketItem="item"
+          @drop="dropItem"
+          @sync="syncItem"
+        />
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-import BasketItemsTableItemVue from './BasketItemsTableItem.vue'
+import BasketItem from './BasketItem.vue'
 // import { copyValue } from '@/helpers/helper'
 export default {
   name: 'Basket',
@@ -78,7 +89,8 @@ export default {
       basket: null,
       loading: true,
       disableSubmit: false,
-      form: { productId: null, weight: null, protein: 0, fat: 0, carbohydrate: 0, calories: 0, hash: null }
+      form: { productId: null, weight: null, protein: 0, fat: 0, carbohydrate: 0, calories: 0, hash: null },
+      all: { protein: 0, fat: 0, carbohydrate: 0, calories: 0 }
     }
   },
   watch: {
@@ -89,22 +101,30 @@ export default {
       this.form.fat = need ? this.formProduct.fat * this.form.weight / 100 : 0
       this.form.carbohydrate = need ? this.formProduct.carbohydrate * this.form.weight / 100 : 0
       this.form.calories = need ? this.formProduct.calories * this.form.weight / 100 : 0
+    },
+    'basket.items' (to, from) {
+      this.fetchPFC()
     }
   },
   created () {
     this.fetchData()
   },
   computed: {
-    isFormChanged () {
-      return this.form.productId + this.form.weight
-    },
-    formProduct () {
-      return this.products.find((el) => parseInt(el.id) === parseInt(this.form.productId))
-    },
+    isFormChanged () { return this.form.productId + this.form.weight },
+    formProduct () { return this.products.find((el) => parseInt(el.id) === parseInt(this.form.productId)) },
     basketId () { return parseInt(this.$route.params.id) },
     products () { return this.$store.getters.products }
   },
   methods: {
+    fetchPFC () {
+      this.all = { protein: 0, fat: 0, carbohydrate: 0, calories: 0 }
+      this.basket.items.map((el) => {
+        this.all.protein += el.protein
+        this.all.fat += el.fat
+        this.all.carbohydrate += el.carbohydrate
+        this.all.calories += el.calories
+      })
+    },
     fetchData () {
       this.basket = null
       this.loading = true
@@ -119,17 +139,25 @@ export default {
       )
     },
     addItem () {
-      let product = this.basket.items.find((el) => el.productId === this.form.productId)
+      let item = {
+        hash: this.$store.getters.getHash,
+        productId: this.form.productId,
+        weight: this.form.weight,
+        protein: this.form.protein,
+        fat: this.form.fat,
+        carbohydrate: this.form.carbohydrate,
+        calories: this.form.calories
+      }
+
+      let product = this.basket.items
+        ? this.basket.items.find((el) => el.productId === this.form.productId)
+        : null
       if (!product) {
-        this.basket.items.push({
-          hash: this.$store.getters.getHash,
-          productId: this.form.productId,
-          weight: this.form.weight,
-          protein: this.form.protein,
-          fat: this.form.fat,
-          carbohydrate: this.form.carbohydrate,
-          calories: this.form.calories
-        })
+        if (this.basket.items) {
+          this.basket.items.push(item)
+        } else {
+          this.basket.items = [item]
+        }
       } else {
         product.weight = parseInt(product.weight) + parseInt(this.form.weight)
       }
@@ -140,21 +168,24 @@ export default {
     },
     save () {
       this.disableSubmit = true
-      this.$store.dispatch(this.productId ? 'updateBasket' : 'addBasket', this.basket).then(
+      this.$store.dispatch('basketTSave', this.basket).then(
         (result) => {
           this.disableSubmit = false
           this.errors = {}
-          this.$router.push({name: 'products'})
+          this.$router.push({name: 'baskets'})
         },
         (result) => {
           this.disableSubmit = false
           this.errors = result.response.data
         }
       )
+    },
+    syncItem (item) {
+      this.basket.items.splice(this.basket.items.indexOf(this.basket.items.find((el) => el.productId === item.productId)), 1, item)
     }
   },
   components: {
-    basketItemsTableItem: BasketItemsTableItemVue
+    BasketItem: BasketItem
   }
 }
 </script>
